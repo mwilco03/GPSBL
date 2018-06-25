@@ -1,0 +1,5 @@
+function Decode-Base64{
+    param([parameter(ValueFromPipeline)]$String);
+    $String=[Text.Encoding]::ASCII.GetString([Convert]::fromBase64String($String));
+    return $String
+    }
