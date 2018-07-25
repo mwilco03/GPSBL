@@ -1,0 +1,16 @@
+#!/bin/bash
+#Setting var eh by checking so-elasticsearch container
+eh=$(docker inspect so-elasticsearch -f '{{ range $k,$v :=.NetworkSettings.Networks}}{{println}}{{$k}}:{{.IPAddress}}{{end}}'\
+ |grep elastic|cut -d: -f2)
+#Setting var eh by checking so-metasponse container
+#Change to fit your mongodb
+mh=$(docker inspect so-metasponse -f '{{ range $k,$v :=.NetworkSettings.Networks}}{{println}}{{$k}}:{{.IPAddress}}{{end}}'\
+ |grep elastic|cut -d: -f2)
+echo "Setting Mongo host" $mh
+echo "Setting Elastic host" $eh
+#Running command in mongo-to-elastic docker 
+#psudo code read something like node increase memeory call mongo-to-elastic
+#use vars established earlier on metasponse_user database
+docker exec -it mongo-to-elastic /bin/bash -c "node --max_old_space_size=4096 "\
+"/usr/local/lib/node_modules/mongo-to-elastic/bin/index.js "\
+"--mh "$mh" --eh "$eh" --db metasponse_user"
