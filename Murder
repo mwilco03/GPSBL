@@ -1,0 +1,35 @@
+function Decode-Base64{
+    param([parameter(ValueFromPipeline)]$String);
+    $String=[Text.Encoding]::ASCII.GetString([Convert]::fromBase64String($String));
+    return $String
+    }
+function Set-ClipboardText {
+        param($text)
+ 
+        # need to use temp file to avoid exceeding command-line length limit
+        $temp = [io.path]::GetTempFileName()
+ 
+        try {
+            set-content -Path $temp -Value $text
+ 
+            $command = {
+                    add-type -an system.windows.forms
+                    [System.Windows.Forms.Clipboard]::SetText((get-content $args))
+            }
+             
+            powershell -sta -noprofile -command $command -args $temp
+ 
+        } finally {
+            if ((test-path $temp)) {
+                remove-item $temp
+            }
+        }
+}
+ 
+function Get-ClipboardText {
+        $command = {
+                add-type -an system.windows.forms
+                [System.Windows.Forms.Clipboard]::GetText()
+        }
+        powershell -sta -noprofile -command $command
+}
