@@ -16,8 +16,7 @@ $ProcessObject=@{}
 Get-CimInstance -Namespace root/cimv2 -ClassName win32_process|
    Select-Object ProcessName,Path,CommandLine,ExecutablePath,Handle,ProcessId,ParentProcessID,ThreadCount,
       @{Name="User";Expression={($_|Invoke-CimMethod -MethodName GetOwner).User};},
-      @{Name="Domain";Expression={($_|Invoke-CimMethod -MethodName GetOwner).Domain};},
-      @{Name="ExecutableHash";Expression={(Get-FileHash $_.ExecutablePath).Hash};}|
+      @{Name="Domain";Expression={($_|Invoke-CimMethod -MethodName GetOwner).Domain};}|
          %{$ProcessObject[[int]$_.Handle]=$_}
 
 Get-CimInstance -Namespace root/StandardCimv2 -ClassName MSFT_NetTCPConnection|
@@ -43,6 +42,7 @@ $NetworkObject.keys|%{
          @{Name="ThreadCount";Expression={$ProcessObject[[int]$_.OwningProcess].ThreadCount}},
          @{Name="Domain";Expression={$ProcessObject[[int]$_.OwningProcess].Domain}},
          @{Name="User";Expression={$ProcessObject[[int]$_.OwningProcess].User}},
+         @{Name="ExecutableHash";Expression={(Get-FileHash $ProcessObject[[int]$_.OwningProcess].ExecutablePath).Hash};},
          @{Name="Timestamp";Expression={Get-Date -Format "o"}}
    }
 }
