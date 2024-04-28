@@ -44,7 +44,7 @@ function Get-BrowserHistoryFiles {
         $searchPaths | ForEach-Object {
             Get-ChildItem -Path $_ -File -Recurse -ErrorAction SilentlyContinue | Where-Object {
                 ($_.Name -match "history" -or $_.Name -eq "places.sqlite") -and
-                ($_.FullName -match "brave|edge|firefox|vivaldi|opera|chrome") -and
+                ($_.FullName -match "brave|edge|firefox|vivaldi|opera|chrome|chromium|centbrowser|maxthon|iridium|palemoon") -and
                 ($_.FullName -notmatch "extensions")
             } | Select-Object -ExpandProperty FullName
         }
