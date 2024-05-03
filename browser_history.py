@@ -46,11 +46,14 @@ def query_firefox(conn):
 
 def get_username_from_path(database_file):
     try:
-        parent_dir = database_file.split("/")[database_file.split("/").index("Users")+1]
+        try:
+            parent_dir = database_file.split("/")[database_file.split("/").index("Users")+1]
+        except ValueError:
+            parent_dir = database_file.split("/")[database_file.split("/").index("Library")-1]
+        return parent_dir
     except ValueError:
-        parent_dir = database_file.split("/")[database_file.split("/").index("Library")-1]
-    return parent_dir
-
+        return "Anon_User"
+        
 def setup_argparse():
     parser = argparse.ArgumentParser(description='Automatically find and process browser history databases within a specified directory to export the browsing history into CSV format.')
     parser.add_argument('directory', nargs='?', default=os.getcwd(), help='Directory to search for browser history database files. Defaults to the current working directory if not specified.')
