@@ -1,4 +1,10 @@
-import pandas as pd
+def print_table(data):
+    widths = {k: max(len(k), *(len(str(d[k])) for d in data)) for k in data[0]}
+    print(" ".join(f"{k:{widths[k]}}" for k in widths))
+    print("-" * sum(widths.values()))
+    for row in data:
+        print(" ".join(f"{str(row[k]):{widths[k]}}" for k in widths))
+
 nets=[]
 adrs=[]
 networks=[]
@@ -23,5 +29,5 @@ for i in range(8):
     n['network_ranges'] = [i for i in range(0,256,adrs[i])][1:11]
     n['next_network'] = str(adrs[i]) + '*(n<=' + str(nets[i]-1) + ')'
     networks.append(n)
-pd.set_option('display.max_columns', None) 
-print(pd.DataFrame(networks))
+
+print_table(networks)
