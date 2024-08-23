@@ -1,3 +1,4 @@
+#import pandas as pd
 def print_table(data):
     widths = {k: max(len(k), *(len(str(d[k])) for d in data)) for k in data[0]}
     print(" ".join(f"{k:{widths[k]}}" for k in widths))
@@ -30,4 +31,5 @@ for i in range(8):
     n['next_network'] = str(adrs[i]) + '*(n<=' + str(nets[i]-1) + ')'
     networks.append(n)
 
+#print(pd.DataFrame(networks))
 print_table(networks)
