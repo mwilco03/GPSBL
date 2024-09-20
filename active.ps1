@@ -24,21 +24,19 @@ function Get-WinVer {
 }
 
 function Activate-Win {
-    Ask-Mack "Ask Mack for this" 
-    $hstName = Read-Host 
-    slmgr.vbs -upk
-    slmgr.vbs -ipk W269N-WFGWX-YVC9B-4J6C9-T83GX
-    slmgr.vbs -skms $hstName
-    slmgr.vbs -ato
-    $status = slmgr.vbs -dlv
-    if ($status -match "Licensed") {
-        Write-Host "Windows activated successfully." -ForegroundColor Green
-        return $true
-    } else {
-        Write-Host "Windows activation failed." -ForegroundColor Red
-        return $false
+    Ask-Mack "Ask Mack for this : "
+    $hstName = Read-Host
+    $commands = @("-upk", "-ipk W269N-WFGWX-YVC9B-4J6C9-T83GX", "-skms $hstName", "-ato", "-dlv")
+    foreach ($cmd in $commands) {
+        Start-Process "slmgr.vbs" -ArgumentList $cmd -Wait
+        ask-mack $cmd.split()[0]
+        Start-Sleep 10
     }
+    $status = slmgr.vbs -dlv
+    if ($status -match "Licensed") { Write-Host "Windows activated successfully." -ForegroundColor Green; return $true }
+    else { Write-Host "Windows activation failed." -ForegroundColor Red; return $false }
 }
+
 
 function Enable-BLC {
     $tpm = Get-WmiObject -Namespace "Root\CIMv2\Security\MicrosoftTpm" -Class Win32_Tpm
@@ -54,20 +52,13 @@ function Enable-BLC {
 
 function Check-BLStat {
     $status = Get-BitLockerVolume -MountPoint "C:"
-    if ($status.ProtectionStatus -eq 'On') {
-        Write-Host "BitLocker is enabled on C:. Encryption: $($status.EncryptionPercentage)%." -ForegroundColor Green
-    } else {
-        Write-Host "BitLocker is not enabled on C:." -ForegroundColor Red
-    }
+    if ($status.ProtectionStatus -eq 'On') {Write-Host "BitLocker is enabled on C:. Encryption: $($status.EncryptionPercentage)%." -ForegroundColor Green} 
+    else {Write-Host "BitLocker is not enabled on C:." -ForegroundColor Red}
 }
 
 # Main Logic
 Write-Host "Current Version: " -NoNewline -ForegroundColor Yellow
 Write-Host $(Get-WinVer) -ForegroundColor Yellow
 
-if (Activate-Win) {
-    Enable-BLC
-    Check-BLStat
-} else {
-    Write-Host "BitLocker will not be enabled because Windows activation failed." -ForegroundColor Red
-}
+if (Activate-Win) {Enable-BLC; Check-BLStat} 
+else {Write-Host "BitLocker will not be enabled because Windows activation failed." -ForegroundColor Red}
