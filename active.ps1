@@ -24,8 +24,8 @@ function Get-WinVer {
 }
 
 function Activate-Win {
-    Ask-Mack "Ask Mack for this" -NewLine
-    $hstName = Read-Host "Enter KMS Hostname"
+    Ask-Mack "Ask Mack for this" 
+    $hstName = Read-Host 
     slmgr.vbs -upk
     slmgr.vbs -ipk W269N-WFGWX-YVC9B-4J6C9-T83GX
     slmgr.vbs -skms $hstName
