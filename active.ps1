@@ -1,3 +1,4 @@
+Start-Transcript 
 function Ask-Mack {
     param([string]$text, [switch]$NewLine)
     for ($i = 0; $i -lt $text.Length; $i++) { 
@@ -29,11 +30,15 @@ function Activate-Win {
     $commands = @("-upk", "-ipk W269N-WFGWX-YVC9B-4J6C9-T83GX", "-skms $hstName", "-ato", "-dlv")
     foreach ($cmd in $commands) {
         Start-Process "slmgr.vbs" -ArgumentList $cmd -Wait
-        ask-mack $cmd.split()[0]
+        switch($cmd.split()[0]){
+            "-upk" {ask-mack "Uninstall Key"}
+            "-ipk" {ask-mack "Install New Key"}
+            "-skms" {ask-mack "Server Set"}
+            "-ato" {ask-mack "Uninstall Key"}
+            "-dlv" {ask-mack "Display Lic"}
         Start-Sleep 10
     }
-    $status = slmgr.vbs -dlv
-    if ($status -match "Licensed") { Write-Host "Windows activated successfully." -ForegroundColor Green; return $true }
+    if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -in  4, 48, 96, 98, 121, 125) { Write-Host "Windows activated successfully." -ForegroundColor Green; return $true }
     else { Write-Host "Windows activation failed." -ForegroundColor Red; return $false }
 }
 
@@ -57,6 +62,7 @@ function Check-BLStat {
 }
 
 # Main Logic
+Write-Host "Current Key: $((Get-WmiObject -Query "Select OA3xOriginalProductKey from SoftwareLicensingService").OA3xOriginalProductKey)" -NoNewline -ForegroundColor Yellow
 Write-Host "Current Version: " -NoNewline -ForegroundColor Yellow
 Write-Host $(Get-WinVer) -ForegroundColor Yellow
 
