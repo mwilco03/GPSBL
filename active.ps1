@@ -31,11 +31,11 @@ function Activate-Win {
     foreach ($cmd in $commands) {
         Start-Process "slmgr.vbs" -ArgumentList $cmd -Wait
         switch($cmd.split()[0]){
-            "-upk" {ask-mack "Uninstall Key"}
-            "-ipk" {ask-mack "Install New Key"}
-            "-skms" {ask-mack "Server Set"}
-            "-ato" {ask-mack "Uninstall Key"}
-            "-dlv" {ask-mack "Display Lic"}
+            "-upk" {Write-host "Uninstall Key"  -ForegroundColor Yellow}
+            "-ipk" {Write-Host "Install New Key"  -ForegroundColor Yellow}
+            "-skms" {Write-Host "Server Set" -ForegroundColor Yellow}
+            "-ato" {Write-Host "Uninstall Key" -ForegroundColor Yellow}
+            "-dlv" {Write-Host "Display Lic" -ForegroundColor Yellow}
         Start-Sleep 10
     }
     if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -in  4, 48, 96, 98, 121, 125) { Write-Host "Windows activated successfully." -ForegroundColor Green; return $true }
@@ -66,5 +66,9 @@ Write-Host "Current Key: $((Get-WmiObject -Query "Select OA3xOriginalProductKey 
 Write-Host "Current Version: " -NoNewline -ForegroundColor Yellow
 Write-Host $(Get-WinVer) -ForegroundColor Yellow
 
-if (Activate-Win) {Enable-BLC; Check-BLStat} 
+if (Activate-Win) {
+Ask-Mack "This will now encrypt drive are you sure? : "
+$Crypto=Read-host 
+if($crypto -like "y*"){Enable-BLC; Check-BLStat} else { Write-host "Bailed out" -ForegroundColor Red}
 else {Write-Host "BitLocker will not be enabled because Windows activation failed." -ForegroundColor Red}
+}
