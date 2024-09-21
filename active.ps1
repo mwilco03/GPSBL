@@ -10,8 +10,7 @@ function Ask-Mack {
 
 function Activate-Win {
     Ask-Mack "Ask Mack for this : " -NewLine
-    $hstName = Read-Host "Enter KMS Hostname"
-    
+    $hstName = Read-Host
     $commands = @("-upk", "-ipk W269N-WFGWX-YVC9B-4J6C9-T83GX", "-skms $hstName", "-ato", "-dlv")
     foreach ($cmd in $commands) {
         Start-Process "slmgr.vbs" -ArgumentList $cmd -Wait
