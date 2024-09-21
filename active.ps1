@@ -9,22 +9,24 @@ function Ask-Mack {
 }
 
 function Activate-Win {
+    param([string]$caption)
     Ask-Mack "Ask Mack for this : " -NewLine
     $hstName = Read-Host
     $commands = @("-upk", "-ipk W269N-WFGWX-YVC9B-4J6C9-T83GX", "-skms $hstName", "-ato", "-dlv")
     foreach ($cmd in $commands) {
         Start-Process "slmgr.vbs" -ArgumentList $cmd -Wait
         switch ($cmd.split()[0]) {
-            "-upk" { Write-Host "Uninstalling Old Key" -ForegroundColor Yellow }
-            "-ipk" { Write-Host "Install New Key" -ForegroundColor Yellow }
-            "-skms" { Write-Host "Setting Server" -ForegroundColor Yellow }
-            "-ato" { Write-Host "Activating" -ForegroundColor Yellow }
-            "-dlv" { Write-Host "Displaying Info" -ForegroundColor Yellow }
+            "-upk" { Write-Host "Uninstalling Old Key" -ForegroundColor Green }
+            "-ipk" { Write-Host "Install New Key" -ForegroundColor Green }
+            "-skms" { Write-Host "Setting Server" -ForegroundColor Green }
+            "-ato" { Write-Host "Activating" -ForegroundColor Green }
+            "-dlv" { Write-Host "Displaying Info" -ForegroundColor Green }
         }
-        Start-Sleep 10
+        Start-Sleep 3
     }
-    $os = Get-CimInstance -ClassName Win32_OperatingSystem
-    Write-Host $("New Version: " + ($os = Get-CimInstance -ClassName Win32_OperatingSystem).caption) -ForegroundColor Yellow
+    $os = $(Get-CimInstance -ClassName Win32_OperatingSystem).caption
+    if ($caption -neq $os){Write-Host "Changed Version" -ForegroundColor Green }
+    Write-Host $("New Version: $os") -ForegroundColor Yellow
     if ($os.caption -like "*Pro*" -or $osEdition -like "*Enterprise*" -or $osEdition -like "*Education*") {
         Write-Host "Windows is activated and the version is supported." -ForegroundColor Green; return $true} 
     else { Write-Host "Windows activation failed or unsupported version." -ForegroundColor Red; return $false}
@@ -49,10 +51,11 @@ function Check-BLStat {
 }
 
 # Main Logic
+$os = $(Get-CimInstance -ClassName Win32_OperatingSystem).caption
 Write-Host "Current Key: $((Get-WmiObject -Query 'Select OA3xOriginalProductKey from SoftwareLicensingService').OA3xOriginalProductKey)" -ForegroundColor Yellow
-Write-Host $("Current Version: " + ($os = Get-CimInstance -ClassName Win32_OperatingSystem).caption) -ForegroundColor Yellow
+Write-Host $("Current Version: $os ") -ForegroundColor Yellow
 
-if (Activate-Win) {
+if (Activate-Win $os) {
     Ask-Mack "This will now encrypt drive. Are you sure? : "
     $crypto = Read-Host
     if ($crypto -like "y*") { Enable-BLC; Check-BLStat } 
