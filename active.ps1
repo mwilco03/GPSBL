@@ -54,12 +54,11 @@ Write-Host "Current Key: $((Get-WmiObject -Query 'Select OA3xOriginalProductKey 
 Write-Host $("Current Version: " + ($os = Get-CimInstance -ClassName Win32_OperatingSystem).caption) -ForegroundColor Yellow
 
 if (Activate-Win) {
-    Ask-Mack "This will now encrypt drive. Are you sure? : " -NewLine
+    Ask-Mack "This will now encrypt drive. Are you sure? : "
     $crypto = Read-Host
     if ($crypto -like "y*") { Enable-BLC; Check-BLStat } 
     else { Write-Host "Bailed out" -ForegroundColor Red }
-} else {
-    Write-Host "BitLocker will not be enabled because Windows activation failed." -ForegroundColor Red
-}
+} 
+else { Write-Host "BitLocker will not be enabled because Windows activation failed." -ForegroundColor Red}
 
 Stop-Transcript
