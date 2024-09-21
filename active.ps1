@@ -10,7 +10,7 @@ function Ask-Mack {
 
 function Activate-Win {
     param([string]$caption)
-    Ask-Mack "Ask Mack for this : " -NewLine
+    Ask-Mack "Ask Mack for this : "
     $hstName = Read-Host
     $commands = @("-upk", "-ipk W269N-WFGWX-YVC9B-4J6C9-T83GX", "-skms $hstName", "-ato", "-dlv")
     foreach ($cmd in $commands) {
@@ -24,10 +24,10 @@ function Activate-Win {
         }
         Start-Sleep 3
     }
-    $os = $(Get-CimInstance -ClassName Win32_OperatingSystem).caption
-    if ($caption -neq $os){Write-Host "Changed Version" -ForegroundColor Green }
-    Write-Host $("New Version: $os") -ForegroundColor Yellow
-    if ($os.caption -like "*Pro*" -or $osEdition -like "*Enterprise*" -or $osEdition -like "*Education*") {
+    $newOs = $(Get-CimInstance -ClassName Win32_OperatingSystem).caption
+    if ($caption -neq $newOs){Write-Host "Version Has Changed" -ForegroundColor Green }
+    Write-Host $("New Version: $newOs") -ForegroundColor Yellow
+    if ($newOs -like "*Pro*" -or $newOs -like "*Enterprise*" -or $newOs -like "*Education*") {
         Write-Host "Windows is activated and the version is supported." -ForegroundColor Green; return $true} 
     else { Write-Host "Windows activation failed or unsupported version." -ForegroundColor Red; return $false}
 }
