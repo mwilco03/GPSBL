@@ -1,4 +1,4 @@
-Start-Transcript -Path "C:\Path\To\Your\LogFile.txt" -Append
+Start-Transcript 
 
 function Ask-Mack {
     param([string]$text, [switch]$NewLine)
