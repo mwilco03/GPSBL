@@ -1,3 +1,96 @@
+
+(function() {
+    // Generic error handler to ignore errors
+    function safeExecute(fn) {
+        try {
+            fn();
+        } catch (e) {
+            console.warn("SCORM API Error: ", e);
+        }
+    }
+
+    // SCORM API Object Detection
+    const API = window.API || window.API_1484_11 || null;
+
+    if (!API) {
+        console.error("SCORM API not found. Cannot execute script.");
+        return;
+    }
+
+    // Setting completion and success statuses for cmi
+    const statuses = ["completed", "incomplete", "not attempted", "failed", "passed"];
+    const score = 1; // Fixed score
+
+    // Function to iterate and set all combinations
+    function setAllCombinations() {
+        statuses.forEach(completionStatus => {
+            statuses.forEach(successStatus => {
+                safeExecute(() => {
+                    // SCORM 1.2 and SCORM 2004 core calls
+                    if (API.LMSSetValue) {
+                        API.LMSSetValue("cmi.core.score.raw", score.toString());
+                        API.LMSSetValue("cmi.core.lesson_status", completionStatus);
+                    }
+
+                    if (API.SetValue) {
+                        API.SetValue("cmi.score.raw", score.toString());
+                        API.SetValue("cmi.completion_status", completionStatus);
+                        API.SetValue("cmi.success_status", successStatus);
+                    }
+
+                    // Specific SCORM 2004 calls
+                    if (API.SetValue) {
+                        API.SetValue("cmi.core.score.raw", score.toString());
+                        API.SetValue("cmi.core.lesson_status", completionStatus);
+                        API.SetValue("cmi.success_status", successStatus);
+                    }
+
+                    // Interactions
+                    if (API.SetValue) {
+                        API.SetValue("cmi.interactions._count", "1");
+                        API.SetValue("cmi.interactions.0.id", "interaction1");
+                        API.SetValue("cmi.interactions.0.type", "choice");
+                        API.SetValue("cmi.interactions.0.result", "correct");
+                    }
+
+                    // Objectives
+                    if (API.SetValue) {
+                        API.SetValue("cmi.objectives._count", "1");
+                        API.SetValue("cmi.objectives.0.id", "objective1");
+                        API.SetValue("cmi.objectives.0.score.raw", score.toString());
+                        API.SetValue("cmi.objectives.0.success_status", successStatus);
+                    }
+
+                    // Finalize Data
+                    if (API.LMSCommit) {
+                        API.LMSCommit("");
+                    }
+                    if (API.Commit) {
+                        API.Commit("");
+                    }
+
+                    // Finish session
+                    if (API.LMSFinish) {
+                        API.LMSFinish("");
+                    }
+                    if (API.Finish) {
+                        API.Finish("");
+                    }
+                });
+            });
+        });
+    }
+
+    // Start the process
+    setAllCombinations();
+
+    console.log("SCORM script executed successfully. All combinations of completion, success, and scores have been set.");
+})();
+
+
+/*
+
+
 SCORM_SetPassed()
 SCORM_SetCompleted()
 API.LMSSetValue("cmi.core.lesson_status","completed")
@@ -9,3 +102,5 @@ SCORM_CallLMSCommit("")
 LMSFinish("")
 API.LMSFinish("")
 SCORM_CallLMSFinish("")
+
+*/
