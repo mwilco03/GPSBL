@@ -10,9 +10,9 @@
     }
 
     // SCORM API Object Detection
-    const API = window.API || window.API_1484_11 || window.SCORM_GetAPI() || null;
+    __API__ = window.API || window.API_1484_11 || window.SCORM_GetAPI() || null;
 
-    if (!API) {
+    if (!__API__) {
         console.error("SCORM API not found. Cannot execute script.");
         return;
     }
@@ -27,54 +27,54 @@
             statuses.forEach(successStatus => {
                 safeExecute(() => {
                     // SCORM 1.2 and SCORM 2004 core calls
-                    if (API.LMSSetValue) {
-                        API.LMSSetValue("cmi.core.score.raw", score.toString());
-                        API.LMSSetValue("cmi.core.lesson_status", completionStatus);
+                    if (__API__.LMSSetValue) {
+                        __API__.LMSSetValue("cmi.core.score.raw", score.toString());
+                        __API__.LMSSetValue("cmi.core.lesson_status", completionStatus);
                     }
 
-                    if (API.SetValue) {
-                        API.SetValue("cmi.score.raw", score.toString());
-                        API.SetValue("cmi.completion_status", completionStatus);
-                        API.SetValue("cmi.success_status", successStatus);
+                    if (__API__.SetValue) {
+                        __API__.SetValue("cmi.score.raw", score.toString());
+                        __API__.SetValue("cmi.completion_status", completionStatus);
+                        __API__.SetValue("cmi.success_status", successStatus);
                     }
 
                     // Specific SCORM 2004 calls
-                    if (API.SetValue) {
-                        API.SetValue("cmi.core.score.raw", score.toString());
-                        API.SetValue("cmi.core.lesson_status", completionStatus);
-                        API.SetValue("cmi.success_status", successStatus);
+                    if (__API__.SetValue) {
+                        __API__.SetValue("cmi.core.score.raw", score.toString());
+                        __API__.SetValue("cmi.core.lesson_status", completionStatus);
+                        __API__.SetValue("cmi.success_status", successStatus);
                     }
 
                     // Interactions
-                    if (API.SetValue) {
-                        API.SetValue("cmi.interactions._count", "1");
-                        API.SetValue("cmi.interactions.0.id", "interaction1");
-                        API.SetValue("cmi.interactions.0.type", "choice");
-                        API.SetValue("cmi.interactions.0.result", "correct");
+                    if (__API__.SetValue) {
+                        __API__.SetValue("cmi.interactions._count", "1");
+                        __API__.SetValue("cmi.interactions.0.id", "interaction1");
+                        __API__.SetValue("cmi.interactions.0.type", "choice");
+                        __API__.SetValue("cmi.interactions.0.result", "correct");
                     }
 
                     // Objectives
-                    if (API.SetValue) {
-                        API.SetValue("cmi.objectives._count", "1");
-                        API.SetValue("cmi.objectives.0.id", "objective1");
-                        API.SetValue("cmi.objectives.0.score.raw", score.toString());
-                        API.SetValue("cmi.objectives.0.success_status", successStatus);
+                    if (__API__.SetValue) {
+                        __API__.SetValue("cmi.objectives._count", "1");
+                        __API__.SetValue("cmi.objectives.0.id", "objective1");
+                        __API__.SetValue("cmi.objectives.0.score.raw", score.toString());
+                        __API__.SetValue("cmi.objectives.0.success_status", successStatus);
                     }
 
                     // Finalize Data
-                    if (API.LMSCommit) {
-                        API.LMSCommit("");
+                    if (__API__.LMSCommit) {
+                        __API__.LMSCommit("");
                     }
-                    if (API.Commit) {
-                        API.Commit("");
+                    if (__API__.Commit) {
+                        __API__.Commit("");
                     }
 
                     // Finish session
-                    if (API.LMSFinish) {
-                        API.LMSFinish("");
+                    if (__API__.LMSFinish) {
+                        __API__.LMSFinish("");
                     }
-                    if (API.Finish) {
-                        API.Finish("");
+                    if (__API__.Finish) {
+                        __API__.Finish("");
                     }
                 });
             });
