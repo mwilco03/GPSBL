@@ -19,7 +19,7 @@
 
     // Setting completion and success statuses for cmi
     const statuses = ["completed", "incomplete", "not attempted", "failed", "passed"];
-    const score = 1; // Fixed score
+    const score = 100; // Fixed score
 
     // Function to iterate and set all combinations
     function setAllCombinations() {
