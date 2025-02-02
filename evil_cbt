@@ -10,7 +10,7 @@
     }
 
     // SCORM API Object Detection
-    __API__ = window.API || window.API_1484_11 || window.SCORM_GetAPI() || null;
+    __API__ = window.API || window.API_1484_11 || window.SCORM_GetAPI() || window.SCORM2004_GetAPI() || null;
 
     if (!__API__) {
         console.error("SCORM API not found. Cannot execute script.");
