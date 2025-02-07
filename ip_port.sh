@@ -1,0 +1,1 @@
+ip a | grep inet |grep -vE '(inet6|host)' | awk '{print $2}' | cut -d"/" -f1 | while read line ; do echo "Connect to host on http://${line}$(ss -pluwnt | grep *: | grep -v :22 | awk '{print $5}'| sed 's/*//g' )" ; done
