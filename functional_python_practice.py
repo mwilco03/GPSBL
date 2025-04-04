@@ -408,3 +408,220 @@ print(remove_duplicates([1, 1, 1]))        # Expected: [1]
 print(remove_duplicates([]))              # Expected: []
 print(remove_duplicates(['a', 'b', 'a']))  # Expected: ['a', 'b']
 
+# (Remaining 33–60 continue in same style...)
+
+# 33. Invert Dictionary (value -> key)
+def invert_dict(d):
+    # TODO: Return dictionary with keys and values swapped
+    # See: dict comprehension
+    pass
+
+# Tests
+print(invert_dict({'a': 1, 'b': 2}))     # Expected: {1: 'a', 2: 'b'}
+print(invert_dict({}))                   # Expected: {}
+print(invert_dict({'x': 10}))            # Expected: {10: 'x'}
+print(invert_dict({'one': 1, 'two': 2})) # Expected: {1: 'one', 2: 'two'}
+
+# 34. Merge Lists into Dictionary
+def merge_lists(keys, values):
+    # TODO: Return a dictionary from keys and values
+    # See: zip()
+    pass
+
+# Tests
+print(merge_lists(['a', 'b'], [1, 2]))     # Expected: {'a': 1, 'b': 2}
+print(merge_lists([], []))                # Expected: {}
+print(merge_lists(['x'], [10]))           # Expected: {'x': 10}
+print(merge_lists(['a', 'b'], [1]))       # Expected: {'a': 1}
+
+# 35. Only Numbers from Mixed List
+def only_numbers(items):
+    # TODO: Return list of numbers (int, float only)
+    # See: isinstance()
+    pass
+
+# Tests
+print(only_numbers([1, 'a', 3.5, True]))    # Expected: [1, 3.5]
+print(only_numbers(['1', 2, 3.0]))          # Expected: [2, 3.0]
+print(only_numbers([]))                    # Expected: []
+print(only_numbers([None, 0, 4]))          # Expected: [0, 4]
+
+# 36. Most Vowels in Word
+def most_vowels(words):
+    # TODO: Return word with most vowels
+    # See: max() with key
+    pass
+
+# Tests
+print(most_vowels(['hi', 'hello', 'world']))     # Expected: 'hello'
+print(most_vowels(['sky', 'try']))               # Expected: 'sky'
+print(most_vowels(['']))                         # Expected: ''
+print(most_vowels(['aeiou', 'a']))               # Expected: 'aeiou'
+
+# 37. Find Prime Numbers in Range
+def find_primes(n):
+    # TODO: Return list of primes ≤ n
+    # See: loop, modulo
+    pass
+
+# Tests
+print(find_primes(10))     # Expected: [2, 3, 5, 7]
+print(find_primes(1))      # Expected: []
+print(find_primes(2))      # Expected: [2]
+print(find_primes(20))     # Expected: [2, 3, 5, 7, 11, 13, 17, 19]
+
+# 38. Flatten Dictionary to Key:Value Strings
+def flatten_dict(d):
+    # TODO: Return list like ['a:1', 'b:2']
+    # See: f-strings or str formatting
+    pass
+
+# Tests
+print(flatten_dict({'a': 1, 'b': 2}))       # Expected: ['a:1', 'b:2']
+print(flatten_dict({}))                    # Expected: []
+print(flatten_dict({'x': 10}))             # Expected: ['x:10']
+print(flatten_dict({'one': 'uno'}))        # Expected: ['one:uno']
+
+# 39. Common Keys in Dicts
+def common_keys(d1, d2):
+    # TODO: Return list of keys in both dictionaries
+    # See: set intersection
+    pass
+
+# Tests
+print(common_keys({'a': 1}, {'a': 2}))             # Expected: ['a']
+print(common_keys({'x': 1}, {'y': 2}))             # Expected: []
+print(common_keys({'a': 1, 'b': 2}, {'b': 3}))     # Expected: ['b']
+print(common_keys({}, {}))                        # Expected: []
+
+# 40. Index of Minimum Value
+def index_of_min(lst):
+    # TODO: Return index of smallest value
+    # See: enumerate(), min()
+    pass
+
+# Tests
+print(index_of_min([3, 1, 2]))        # Expected: 1
+print(index_of_min([0]))              # Expected: 0
+print(index_of_min([5, -1, -2]))      # Expected: 2
+print(index_of_min([10, 9, 10]))      # Expected: 1
+
+# 41. Filter Even Numbers
+def filter_evens(lst):
+    # TODO: Return new list with only even numbers
+    # See: list comprehension
+    pass
+
+# Tests
+print(filter_evens([1, 2, 3, 4]))       # Expected: [2, 4]
+print(filter_evens([]))                # Expected: []
+print(filter_evens([1, 3, 5]))          # Expected: []
+print(filter_evens([0, 2, 8]))          # Expected: [0, 2, 8]
+
+# 42. Sort Strings by Length
+def sort_by_length(words):
+    # TODO: Sort list by word length
+    # See: sorted(), key=len
+    pass
+
+# Tests
+print(sort_by_length(['hi', 'hello', 'a']))  # Expected: ['a', 'hi', 'hello']
+print(sort_by_length(['one']))               # Expected: ['one']
+print(sort_by_length([]))                    # Expected: []
+print(sort_by_length(['abc', 'ab', 'abcd'])) # Expected: ['ab', 'abc', 'abcd']
+
+# 43. Group by First Letter
+def group_by_first_letter(words):
+    # TODO: Group words by first letter
+    # See: dictionary of lists
+    pass
+
+# Tests
+print(group_by_first_letter(["apple", "apricot", "banana"]))  # {'a': ['apple', 'apricot'], 'b': ['banana']}
+print(group_by_first_letter([]))                               # Expected: {}
+print(group_by_first_letter(["dog", "deer"]))                  # {'d': ['dog', 'deer']}
+print(group_by_first_letter(["zebra"]))                        # {'z': ['zebra']}
+
+# 44. Count Characters (Case-Insensitive)
+def count_characters(s):
+    # TODO: Return character frequency dictionary (lowercase only)
+    # See: dictionary, lower()
+    pass
+
+# Tests
+print(count_characters("AaBb"))     # Expected: {'a': 2, 'b': 2}
+print(count_characters(""))         # Expected: {}
+print(count_characters("abcABC"))   # Expected: {'a': 2, 'b': 2, 'c': 2}
+print(count_characters("123aA"))    # Expected: {'1': 1, '2': 1, '3': 1, 'a': 2}
+
+# 45. All True?
+def all_true(lst):
+    # TODO: Return True if all elements are truthy
+    # See: all()
+    pass
+
+# Tests
+print(all_true([True, 1, "yes"]))   # Expected: True
+print(all_true([True, 0]))          # Expected: False
+print(all_true([]))                 # Expected: True
+print(all_true([1, 2, 3]))          # Expected: True
+
+# 46. Any True?
+def any_true(lst):
+    # TODO: Return True if any element is truthy
+    # See: any()
+    pass
+
+# Tests
+print(any_true([False, 0, ""]))     # Expected: False
+print(any_true([0, "", "ok"]))      # Expected: True
+print(any_true([]))                 # Expected: False
+print(any_true([False, None, 1]))   # Expected: True
+
+# 47. Merge Two Dicts
+def merge_dicts(d1, d2):
+    # TODO: Combine dictionaries (d2 overwrites d1)
+    # See: dict.update()
+    pass
+
+# Tests
+print(merge_dicts({'a': 1}, {'b': 2}))        # Expected: {'a': 1, 'b': 2}
+print(merge_dicts({'x': 10}, {'x': 20}))      # Expected: {'x': 20}
+print(merge_dicts({}, {'a': 1}))              # Expected: {'a': 1}
+print(merge_dicts({'a': 1}, {}))              # Expected: {'a': 1}
+
+# 48. Word Count in Sentence
+def count_words(sentence):
+    # TODO: Count number of words in sentence
+    # See: str.split()
+    pass
+
+# Tests
+print(count_words("Hello world"))           # Expected: 2
+print(count_words("This is a test."))       # Expected: 4
+print(count_words(""))                      # Expected: 0
+print(count_words("One"))                   # Expected: 1
+
+# 49. Dictionary Comprehension Squares
+def square_dict(nums):
+    # TODO: Return dict where key is number, value is square
+    # See: dict comprehension
+    pass
+
+# Tests
+print(square_dict([1, 2, 3]))        # Expected: {1: 1, 2: 4, 3: 9}
+print(square_dict([]))              # Expected: {}
+print(square_dict([0]))             # Expected: {0: 0}
+print(square_dict([-1, 1]))         # Expected: {-1: 1, 1: 1}
+
+# 50. Flatten 2D List
+def flatten(matrix):
+    # TODO: Return a flat list from 2D list
+    # See: nested loops or comprehension
+    pass
+
+# Tests
+print(flatten([[1, 2], [3, 4]]))       # Expected: [1, 2, 3, 4]
+print(flatten([[5]]))                 # Expected: [5]
+print(flatten([[]]))                  # Expected: []
+print(flatten([[1], [2, 3]]))         # Expected: [1, 2, 3]
