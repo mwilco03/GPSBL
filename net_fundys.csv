@@ -1,0 +1,51 @@
+name,description,category,value,type,state,max_attempts,flags,tags,hints,type_data
+NFQ1 - IPv4 Length,"How many bits are in an IPv4 address?
+A. 16
+B. 32
+C. 64
+D. 128",Network Fundamentals,100,standard,visible,1,B,"multiple-choice,networking",,"{""initial"": 100, ""minimum"": 10, ""decay"": 10}"
+NFQ2 - OSI Layers,"How many layers are in the OSI model?
+A. 5
+B. 6
+C. 7
+D. 4",Network Fundamentals,100,standard,hidden,1,C,"multiple-choice,networking",,"{""initial"": 100, ""minimum"": 10, ""decay"": 10}"
+NFQ3 - DHCP Acronym,"What does the acronym DORA stand for in DHCP?
+A. Discover, Offer, Request, Acknowledgment
+B. Detect, Offer, Response, Action
+C. Deploy, Obtain, Request, Accept
+D. Direct, Order, Respond, Allocate",Network Fundamentals,100,standard,hidden,1,A,"multiple-choice,networking",,"{""initial"": 100, ""minimum"": 10, ""decay"": 10}"
+NFQ4 - DNS Port,"What port does DNS typically use?
+A. 80
+B. 22
+C. 53
+D. 443",Network Fundamentals,100,standard,hidden,1,C,"multiple-choice,networking",,"{""initial"": 100, ""minimum"": 10, ""decay"": 10}"
+NFQ5 - MAC Address Length,"How many bits are in a MAC address?
+A. 32
+B. 64
+C. 128
+D. 48",Network Fundamentals,100,standard,hidden,1,D,"multiple-choice,networking",,"{""initial"": 100, ""minimum"": 10, ""decay"": 10}"
+NFQ6 - IP Class,"An IP address starting with 192 belongs to which class?
+A. Class A
+B. Class B
+C. Class C
+D. Class D",Network Fundamentals,100,standard,hidden,1,C,"multiple-choice,networking",,"{""initial"": 100, ""minimum"": 10, ""decay"": 10}"
+NFQ7 - OSI Encryption Layer,"Which OSI layer handles encryption?
+A. Application
+B. Session
+C. Transport
+D. Presentation",Network Fundamentals,100,standard,hidden,1,D,"multiple-choice,networking",,"{""initial"": 100, ""minimum"": 10, ""decay"": 10}"
+NFQ8 - TCP vs UDP,"Which of the following is true about TCP?
+A. It is unreliable
+B. It uses fewer headers
+C. It establishes a connection before sending data
+D. It is faster than UDP",Network Fundamentals,100,standard,hidden,1,C,"multiple-choice,networking",,"{""initial"": 100, ""minimum"": 10, ""decay"": 10}"
+NFQ9 - IPv6 Length,"How many bits are in an IPv6 address?
+A. 32
+B. 64
+C. 128
+D. 256",Network Fundamentals,100,standard,hidden,1,C,"multiple-choice,networking",,"{""initial"": 100, ""minimum"": 10, ""decay"": 10}"
+NFQ10 - Ethernet Standard,"Which IEEE standard defines Ethernet?
+A. 802.11
+B. 802.15
+C. 802.3
+D. 802.1x",Network Fundamentals,100,standard,hidden,1,C,"multiple-choice,networking",,"{""initial"": 100, ""minimum"": 10, ""decay"": 10}"
