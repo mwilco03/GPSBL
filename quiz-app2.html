@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz App</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    function QuizApp() {
+      const [questions, setQuestions] = useState([]);
+      const [shuffledQuestions, setShuffledQuestions] = useState([]);
+      const [currentView, setCurrentView] = useState('import');
+      const [currentQuestion, setCurrentQuestion] = useState(0);
+      const [answers, setAnswers] = useState({});
+      const [markdownInput, setMarkdownInput] = useState('');
+      const [shuffleEnabled, setShuffleEnabled] = useState(true);
+      const [showFeedback, setShowFeedback] = useState(false);
+      const [selectedAnswer, setSelectedAnswer] = useState(null);
+
+      // Load questions from localStorage on mount
+      useEffect(() => {
+        const saved = localStorage.getItem('quizQuestions');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed.length > 0) {
+            setQuestions(parsed);
+            setCurrentView('menu');
+          }
+        }
+      }, []);
+
+      const shuffleArray = (array) => {
+        const shuffled = [...array];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+      };
+
+      const parseMarkdown = (text) => {
+        const blocks = text.trim().split(/\n\n+/);
+        const parsed = [];
+
+        blocks.forEach((block, index) => {
+          const lines = block.trim().split('\n').filter(line => line.trim());
+          if (lines.length < 2) return;
+
+          const questionText = lines[0].trim();
+          const options = [];
+          let correctAnswer = '';
+
+          for (let i = 1; i < lines.length; i++) {
+            const line = lines[i].trim();
+            
+            if (line.startsWith('* -') || line.startsWith('*-')) {
+              const answer = line.replace(/^\*\s*-\s*/, '').trim();
+              options.push(answer);
+              correctAnswer = answer;
+            } else if (line.startsWith('-')) {
+              const answer = line.replace(/^-\s*/, '').trim();
+              options.push(answer);
+            }
+          }
+
+          if (questionText && options.length > 0 && correctAnswer) {
+            parsed.push({
+              id: index + 1,
+              question: questionText,
+              options: options,
+              correctAnswer: correctAnswer
+            });
+          }
+        });
+
+        return parsed;
+      };
+
+      const handleImport = () => {
+        const parsed = parseMarkdown(markdownInput);
+        if (parsed.length > 0) {
+          setQuestions(parsed);
+          localStorage.setItem('quizQuestions', JSON.stringify(parsed));
+          setCurrentView('menu');
+        }
+      };
+
+      const startQuiz = () => {
+        const quizQuestions = shuffleEnabled ? shuffleArray(questions) : [...questions];
+        // Also shuffle options for each question if shuffle is enabled
+        const processedQuestions = quizQuestions.map(q => ({
+          ...q,
+          options: shuffleEnabled ? shuffleArray(q.options) : q.options
+        }));
+        setShuffledQuestions(processedQuestions);
+        setCurrentQuestion(0);
+        setAnswers({});
+        setShowFeedback(false);
+        setSelectedAnswer(null);
+        setCurrentView('quiz');
+      };
+
+      const handleAnswerSelect = (answer) => {
+        if (showFeedback) return; // Prevent changing answer after feedback shown
+        
+        setSelectedAnswer(answer);
+        setShowFeedback(true);
+        setAnswers({ ...answers, [currentQuestion]: answer });
+      };
+
+      const handleNext = () => {
+        setShowFeedback(false);
+        setSelectedAnswer(null);
+        if (currentQuestion < shuffledQuestions.length - 1) {
+          setCurrentQuestion(currentQuestion + 1);
+        }
+      };
+
+      const handlePrevious = () => {
+        setShowFeedback(false);
+        setSelectedAnswer(null);
+        if (currentQuestion > 0) {
+          setCurrentQuestion(currentQuestion - 1);
+          // Show feedback for previously answered question
+          if (answers[currentQuestion - 1]) {
+            setSelectedAnswer(answers[currentQuestion - 1]);
+            setShowFeedback(true);
+          }
+        }
+      };
+
+      const handleSubmit = () => {
+        setCurrentView('results');
+      };
+
+      const calculateScore = () => {
+        let correct = 0;
+        shuffledQuestions.forEach((q, index) => {
+          if (answers[index] === q.correctAnswer) {
+            correct++;
+          }
+        });
+        return correct;
+      };
+
+      const resetQuiz = () => {
+        setCurrentQuestion(0);
+        setAnswers({});
+        setShowFeedback(false);
+        setSelectedAnswer(null);
+        setCurrentView('menu');
+      };
+
+      const clearQuestions = () => {
+        localStorage.removeItem('quizQuestions');
+        setQuestions([]);
+        setMarkdownInput('');
+        setCurrentView('import');
+      };
+
+      // Import View
+      if (currentView === 'import') {
+        return (
+          <div className="min-h-screen bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center p-4">
+            <div className="bg-white rounded-2xl shadow-xl p-8 max-w-2xl w-full">
+              <h1 className="text-3xl font-bold text-gray-800 mb-2">Quiz App</h1>
+              <p className="text-gray-500 mb-6">Paste your questions in markdown format</p>
+              
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                <p className="text-sm text-blue-800 font-medium mb-2">Format:</p>
+                <pre className="text-xs text-blue-700 font-mono">{`Question text here?
+* - Correct Answer
+- Wrong Answer
+- Wrong Answer
+- Wrong Answer
+
+Next question?
+- Wrong
+* - Correct
+- Wrong`}</pre>
+              </div>
+
+              <textarea
+                value={markdownInput}
+                onChange={(e) => setMarkdownInput(e.target.value)}
+                className="w-full h-64 p-4 border border-gray-300 rounded-lg font-mono text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent mb-4"
+                placeholder="Paste your questions here..."
+              />
+              
+              <button
+                onClick={handleImport}
+                disabled={!markdownInput.trim()}
+                className="w-full py-4 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Import Questions
+              </button>
+            </div>
+          </div>
+        );
+      }
+
+      // Menu View
+      if (currentView === 'menu') {
+        return (
+          <div className="min-h-screen bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center p-4">
+            <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full">
+              <h1 className="text-3xl font-bold text-center text-gray-800 mb-2">Quiz App</h1>
+              <p className="text-gray-500 text-center mb-6">{questions.length} questions loaded</p>
+              
+              {/* Shuffle Toggle */}
+              <div className="bg-gray-50 rounded-xl p-4 mb-6">
+                <label className="flex items-center justify-between cursor-pointer">
+                  <div>
+                    <span className="font-medium text-gray-700">Shuffle Questions</span>
+                    <p className="text-sm text-gray-500">Randomize question and answer order</p>
+                  </div>
+                  <div 
+                    onClick={() => setShuffleEnabled(!shuffleEnabled)}
+                    className={`relative w-14 h-8 rounded-full transition-colors ${shuffleEnabled ? 'bg-indigo-600' : 'bg-gray-300'}`}
+                  >
+                    <div 
+                      className={`absolute top-1 w-6 h-6 bg-white rounded-full shadow transition-transform ${shuffleEnabled ? 'translate-x-7' : 'translate-x-1'}`}
+                    />
+                  </div>
+                </label>
+              </div>
+              
+              <div className="space-y-4">
+                <button
+                  onClick={startQuiz}
+                  className="w-full py-4 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-700 transition-colors"
+                >
+                  Start Quiz
+                </button>
+                <button
+                  onClick={() => setCurrentView('import')}
+                  className="w-full py-4 bg-emerald-500 text-white rounded-xl font-semibold hover:bg-emerald-600 transition-colors"
+                >
+                  Add More Questions
+                </button>
+                <button
+                  onClick={clearQuestions}
+                  className="w-full py-3 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300 transition-colors"
+                >
+                  Clear All Questions
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      }
+
+      // Results View
+      if (currentView === 'results') {
+        const score = calculateScore();
+        const percentage = Math.round((score / shuffledQuestions.length) * 100);
+        
+        return (
+          <div className="min-h-screen bg-gradient-to-br from-indigo-500 to-purple-600 p-4">
+            <div className="max-w-2xl mx-auto">
+              <div className="bg-white rounded-2xl shadow-xl p-8 mb-6">
+                <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Quiz Results</h2>
+                
+                <div className="text-center mb-8">
+                  <div className={`text-6xl font-bold mb-2 ${percentage >= 70 ? 'text-green-600' : percentage >= 50 ? 'text-yellow-600' : 'text-red-600'}`}>
+                    {percentage}%
+                  </div>
+                  <p className="text-gray-600">You got {score} out of {shuffledQuestions.length} correct</p>
+                </div>
+
+                <div className="flex gap-4">
+                  <button
+                    onClick={startQuiz}
+                    className="flex-1 py-3 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-700 transition-colors"
+                  >
+                    Retry Quiz
+                  </button>
+                  <button
+                    onClick={resetQuiz}
+                    className="flex-1 py-3 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300 transition-colors"
+                  >
+                    Back to Menu
+                  </button>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-2xl shadow-xl p-6">
+                <h3 className="font-semibold text-gray-800 mb-4">Review Answers</h3>
+                <div className="space-y-4">
+                  {shuffledQuestions.map((q, index) => {
+                    const isCorrect = answers[index] === q.correctAnswer;
+                    const wasAnswered = answers[index] !== undefined;
+                    return (
+                      <div key={index} className={`p-4 rounded-lg border ${isCorrect ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`}>
+                        <p className="font-medium text-gray-800 mb-2">{index + 1}. {q.question}</p>
+                        <div className="space-y-1 text-sm">
+                          <p>
+                            <span className="text-gray-600">Your answer: </span>
+                            <span className={isCorrect ? 'text-green-700 font-medium' : 'text-red-700 font-medium'}>
+                              {wasAnswered ? answers[index] : 'Not answered'}
+                            </span>
+                          </p>
+                          {!isCorrect && (
+                            <p>
+                              <span className="text-gray-600">Correct answer: </span>
+                              <span className="text-green-700 font-medium">{q.correctAnswer}</span>
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      }
+
+      // Quiz View
+      const question = shuffledQuestions[currentQuestion];
+      const isCorrect = selectedAnswer === question.correctAnswer;
+      
+      return (
+        <div className="min-h-screen bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-xl p-8 max-w-2xl w-full">
+            <div className="flex justify-between items-center mb-6">
+              <span className="text-sm font-medium text-gray-500">
+                Question {currentQuestion + 1} of {shuffledQuestions.length}
+              </span>
+              <button
+                onClick={resetQuiz}
+                className="text-sm text-gray-500 hover:text-gray-700"
+              >
+                Exit
+              </button>
+            </div>
+            
+            <div className="w-full bg-gray-200 rounded-full h-2 mb-8">
+              <div 
+                className="bg-indigo-600 h-2 rounded-full transition-all duration-300"
+                style={{ width: `${((currentQuestion + 1) / shuffledQuestions.length) * 100}%` }}
+              />
+            </div>
+            
+            <h2 className="text-xl font-semibold text-gray-800 mb-6">{question.question}</h2>
+            
+            <div className="space-y-3 mb-6">
+              {question.options.map((option, index) => {
+                let buttonStyle = 'border-gray-200 hover:border-gray-300 text-gray-700';
+                
+                if (showFeedback) {
+                  if (option === question.correctAnswer) {
+                    buttonStyle = 'border-green-500 bg-green-50 text-green-700';
+                  } else if (option === selectedAnswer && option !== question.correctAnswer) {
+                    buttonStyle = 'border-red-500 bg-red-50 text-red-700';
+                  } else {
+                    buttonStyle = 'border-gray-200 text-gray-400';
+                  }
+                } else if (selectedAnswer === option) {
+                  buttonStyle = 'border-indigo-600 bg-indigo-50 text-indigo-700';
+                }
+
+                return (
+                  <button
+                    key={index}
+                    onClick={() => handleAnswerSelect(option)}
+                    disabled={showFeedback}
+                    className={`w-full p-4 text-left rounded-xl border-2 transition-all flex items-center justify-between ${buttonStyle} ${showFeedback ? 'cursor-default' : 'cursor-pointer'}`}
+                  >
+                    <span>{option}</span>
+                    {showFeedback && option === question.correctAnswer && (
+                      <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    )}
+                    {showFeedback && option === selectedAnswer && option !== question.correctAnswer && (
+                      <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Feedback Message */}
+            {showFeedback && (
+              <div className={`p-4 rounded-xl mb-6 ${isCorrect ? 'bg-green-100 border border-green-300' : 'bg-red-100 border border-red-300'}`}>
+                <div className="flex items-center gap-3">
+                  {isCorrect ? (
+                    <>
+                      <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
+                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                      <div>
+                        <p className="font-semibold text-green-800">Correct!</p>
+                        <p className="text-sm text-green-700">Great job!</p>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center">
+                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </div>
+                      <div>
+                        <p className="font-semibold text-red-800">Incorrect</p>
+                        <p className="text-sm text-red-700">The correct answer is: <span className="font-medium">{question.correctAnswer}</span></p>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+            )}
+            
+            <div className="flex gap-4">
+              <button
+                onClick={handlePrevious}
+                disabled={currentQuestion === 0}
+                className="flex-1 py-3 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Previous
+              </button>
+              
+              {currentQuestion === shuffledQuestions.length - 1 ? (
+                <button
+                  onClick={handleSubmit}
+                  disabled={!showFeedback}
+                  className="flex-1 py-3 bg-emerald-500 text-white rounded-xl font-semibold hover:bg-emerald-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Submit
+                </button>
+              ) : (
+                <button
+                  onClick={handleNext}
+                  disabled={!showFeedback}
+                  className="flex-1 py-3 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Next
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<QuizApp />);
+  </script>
+</body>
+</html>
