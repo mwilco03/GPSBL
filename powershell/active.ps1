@@ -1,4 +1,32 @@
-Start-Transcript 
+<#
+.SYNOPSIS
+    Windows activation and BitLocker encryption setup script.
+
+.DESCRIPTION
+    This script performs two main functions:
+    1. Activates Windows using KMS (Key Management Service)
+    2. Enables BitLocker drive encryption on C: drive
+
+    The script prompts for a KMS server hostname, activates Windows,
+    then optionally enables BitLocker with TPM or password protection.
+
+.FUNCTIONS
+    Ask-Mack     - Display rainbow-colored text prompt
+    Activate-Win - Activate Windows via KMS server
+    Enable-BLC   - Enable BitLocker encryption
+    Check-BLStat - Check BitLocker status
+
+.NOTES
+    Requires: Administrator privileges
+    Requires: Windows Pro/Enterprise/Education for BitLocker
+    Creates transcript log of all operations
+
+.EXAMPLE
+    .\active.ps1
+    # Prompts for KMS server, activates Windows, offers BitLocker setup
+#>
+
+Start-Transcript
 
 function Ask-Mack {
     param([string]$text, [switch]$NewLine)

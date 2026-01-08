@@ -1,3 +1,33 @@
+#!/usr/bin/env python3
+"""
+net.py - CIDR Subnet Calculation Reference Table
+
+DESCRIPTION:
+    Generates a reference table for CIDR subnet calculations. Displays
+    network counts, address counts, usable ranges, gateways, and next
+    network calculations for each subnet size.
+
+OUTPUT COLUMNS:
+    - index: Row number (1-8)
+    - cidr: CIDR notations for each octet (/1-/8, /9-/16, /17-/24, /25-/32)
+    - last_subnet: Last subnet address in the range
+    - nets: Number of networks
+    - addresses: Addresses per network
+    - range: Usable host range [1:n]
+    - gateway: Default gateway offset
+    - next_network: First 10 network boundaries
+    - network_calc: Formula for calculating network address
+
+EXAMPLE:
+    python net.py
+    # Displays pandas DataFrame with subnet reference data
+
+REQUIRES:
+    - pandas
+
+SEE ALSO:
+    simplified_net.py - Same logic without pandas dependency
+"""
 
 import pandas as pd
 MAGIC = 8

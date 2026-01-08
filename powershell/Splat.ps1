@@ -1,3 +1,31 @@
+<#
+.SYNOPSIS
+    Base64 decoding and Windows clipboard utilities.
+
+.DESCRIPTION
+    Provides three utility functions:
+    - Decode-Base64: Convert Base64 strings back to ASCII text
+    - Set-ClipboardText: Copy text to Windows clipboard
+    - Get-ClipboardText: Retrieve text from Windows clipboard
+
+.FUNCTIONS
+    Decode-Base64     - Decode Base64 to ASCII string (pipeline enabled)
+    Set-ClipboardText - Set clipboard content (handles large text via temp file)
+    Get-ClipboardText - Get current clipboard text content
+
+.EXAMPLE
+    "SGVsbG8gV29ybGQ=" | Decode-Base64
+    # Returns: Hello World
+
+.EXAMPLE
+    Set-ClipboardText -text "Copy this to clipboard"
+    Get-ClipboardText
+
+.NOTES
+    Clipboard functions require Windows Forms assembly
+    Spawns child PowerShell process in STA mode for clipboard access
+#>
+
 function Decode-Base64{
     param([parameter(ValueFromPipeline=$true)]$String);
     $String=[Text.Encoding]::ASCII.GetString([Convert]::fromBase64String($String));

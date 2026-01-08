@@ -1,3 +1,36 @@
+#!/usr/bin/env python3
+"""
+simplified_net.py - CIDR Subnet Calculation (No Dependencies)
+
+DESCRIPTION:
+    Generates a reference table for CIDR subnet calculations without
+    requiring pandas. Uses a simple ASCII table printer instead.
+
+    This is a standalone version of net.py for environments where
+    pandas is not available.
+
+OUTPUT COLUMNS:
+    - index: Row number (1-8)
+    - cidr: CIDR notations for each octet
+    - last_subnet: Last subnet address
+    - networks: Number of networks
+    - addresses: Addresses per network
+    - use_range: Usable host range
+    - gateway: Default gateway offset
+    - network_ranges: First 10 network boundaries
+    - next_network: Formula for calculating network
+
+EXAMPLE:
+    python simplified_net.py
+    # Displays ASCII table with subnet reference data
+
+REQUIRES:
+    - Python 3.6+ (no external dependencies)
+
+SEE ALSO:
+    net.py - Same logic with pandas DataFrame output
+"""
+
 #import pandas as pd
 def print_table(data):
     widths = {k: max(len(k), *(len(str(d[k])) for d in data)) for k in data[0]}

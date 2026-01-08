@@ -1,3 +1,35 @@
+#!/usr/bin/env python3
+"""
+browser_history.py - Cross-Platform Browser History Extractor
+
+DESCRIPTION:
+    Automatically finds and extracts browser history from Chrome, Safari,
+    and Firefox databases. Converts history to CSV format with decoded
+    URL parameters.
+
+SUPPORTED BROWSERS:
+    - Google Chrome (History)
+    - Apple Safari (History.db)
+    - Mozilla Firefox (places.sqlite)
+
+USAGE:
+    python browser_history.py [directory]
+
+    directory: Path to search for browser databases (default: current directory)
+
+OUTPUT:
+    Creates CSV files alongside each database with columns:
+    - URL, Title, Visit Time UTC, Parent Directory, Decoded URL Params
+
+EXAMPLES:
+    python browser_history.py /Users
+    python browser_history.py C:\\Users
+
+REQUIRES:
+    - Python 3.6+
+    - No external dependencies (uses sqlite3, csv, argparse from stdlib)
+"""
+
 import sqlite3
 import csv
 import sys

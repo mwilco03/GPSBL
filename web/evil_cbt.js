@@ -1,3 +1,28 @@
+/**
+ * evil_cbt.js - SCORM LMS Completion Override
+ *
+ * DESCRIPTION:
+ *   Manipulates SCORM (Sharable Content Object Reference Model) API to mark
+ *   e-learning courses as completed with a perfect score. Works with both
+ *   SCORM 1.2 and SCORM 2004 standards.
+ *
+ * HOW IT WORKS:
+ *   1. Detects the SCORM API object in the browser window
+ *   2. Sets completion status to "completed"
+ *   3. Sets success status to "passed"
+ *   4. Sets score to 100%
+ *   5. Commits changes and finishes the session
+ *
+ * USAGE:
+ *   Paste into browser console while on a SCORM-based e-learning page
+ *
+ * SUPPORTED LMS:
+ *   Any LMS using standard SCORM 1.2 or 2004 API
+ *
+ * WARNING:
+ *   This script is for educational/testing purposes only.
+ *   Using this to fraudulently complete training may violate policies.
+ */
 
 (function() {
     // Generic error handler to ignore errors

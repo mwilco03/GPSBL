@@ -1,4 +1,39 @@
-###I barrowed this code###
+<#
+.SYNOPSIS
+    Send data over TCP connection and receive response.
+
+.DESCRIPTION
+    Creates a TCP client connection to a specified server and port,
+    sends data (supports pipeline input), then reads and returns
+    the server's response. Useful for network testing, log forwarding,
+    or custom protocol communication.
+
+.PARAMETER Server
+    Target server hostname or IP address.
+
+.PARAMETER Port
+    Target TCP port (1-65535).
+
+.PARAMETER Data
+    String data to send. Accepts pipeline input.
+
+.PARAMETER Encoding
+    Text encoding for data. Default: ASCII.
+
+.PARAMETER Timeout
+    Read timeout for response. Default: Infinite.
+
+.EXAMPLE
+    "GET / HTTP/1.0`r`n`r`n" | Send-NetworkData -Server "example.com" -Port 80
+
+.EXAMPLE
+    Send-NetworkData -Server "logserver" -Port 514 -Data "Test log message"
+
+.NOTES
+    Original source: borrowed/adapted code
+    Connection is closed after each call (not persistent)
+#>
+
 function Send-NetworkData {[CmdletBinding()]
     param([Parameter(Mandatory)]
               [string]$Server,

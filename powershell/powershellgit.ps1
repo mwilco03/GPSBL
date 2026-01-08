@@ -1,3 +1,31 @@
+<#
+.SYNOPSIS
+    GitLab API integration module for PowerShell.
+
+.DESCRIPTION
+    Provides functions to connect to a GitLab server, authenticate with a private token,
+    browse projects, and download repository files. Uses interactive GUI prompts for
+    token and server input.
+
+.FUNCTIONS
+    Connect-GitLab    - Main entry point: prompts for token/server, lists projects
+    Set-GitProject    - Select a project from GridView and set $GitRepo
+    Set-GitServer     - Validate and store GitLab server address
+    Test-GitConnection - Test TCP connectivity to GitLab server
+    Set-PrivateToken  - Store authentication header
+    Get-RepoFileList  - List files in repository
+    Get-RepoRawFiles  - Download raw files from repository
+
+.EXAMPLE
+    Connect-GitLab
+    # Prompts for token and server, then allows project/file selection
+
+.NOTES
+    Requires: GUI environment for Out-GridView and InputBox dialogs
+    BUG: Line 26 has typo "fucntion" - should be "function"
+    BUG: Line 32 missing Write-Host command
+#>
+
 function Connect-GitLab{
     [void][Reflection.Assembly]::LoadWithPartialName('Microsoft.VisualBasic')
     $Title = "Token"
